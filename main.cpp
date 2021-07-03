@@ -11,7 +11,10 @@
 #include "processor.h"
 
 using namespace std;
-bool cycle = false;
+
+bool malformedInput = false;
+string DEPENDS = "depends";
+string ON = "on";
 
 void parseLibraryStructure(
     map<Dependency, vector<Dependency> >& dependencyGraph,
@@ -21,6 +24,7 @@ void parseLibraryStructure(
         int stringSize = libraryString.size();
         if (stringSize == 0) break;
         int i = 0;
+        int stringsFound = 0;
         Dependency vertex;
         while (i < stringSize) {
             int j = i;
@@ -28,25 +32,45 @@ void parseLibraryStructure(
                 j++;
             }
             string substring = libraryString.substr(i, j - i);
+
+            if((stringsFound < 1 || stringsFound > 2) && (substring == DEPENDS || substring == ON))  {
+                malformedInput = true;
+            }
+            if(stringsFound == 1 && substring != DEPENDS) {
+                malformedInput = true;
+            }
+
+            if(stringsFound == 2 && substring != ON)  {
+                malformedInput = true;
+            }
+
             if (i == 0) {
                 vertex = Dependency(substring);
                 outputOrder.push_back(substring);
-            } else if (substring != "depends" && substring != "on") {
+            } else if (substring != DEPENDS && substring != ON) {
                 Dependency child = Dependency(substring);
                 dependencyGraph[vertex].push_back(child);
             }
+
             i = j + 1;
+            stringsFound++;
+            if(malformedInput) break;
         }
     }
 }
 
 int main() {
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    freopen("textfiles/input.txt", "r", stdin);
+    freopen("textfiles/output.txt", "w", stdout);
 
     map<Dependency, vector<Dependency> > dependencyGraph;
     vector<string> outputOrder;
     parseLibraryStructure(dependencyGraph, outputOrder);
+
+    if(malformedInput) {
+        cout << "Malformed Input detected!";
+        return 0;
+    }
 
     Processor processor = Processor(dependencyGraph, outputOrder);
     processor.process();

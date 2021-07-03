@@ -1,2 +1,0 @@
-X depends on R Y Z 
-Y depends on Z 

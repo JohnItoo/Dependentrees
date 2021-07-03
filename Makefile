@@ -1,5 +1,7 @@
 CFLAGS = -O
 CC = g++
+all: DepTrees clean
+
 DepTrees: main.o processor.o dependency.o
 	$(CC) $(CFLAGS) -o DepTrees main.o processor.o
 main.o: main.cpp
@@ -9,4 +11,4 @@ processor.o: processor.cpp
 dependency.o: dependency.h
 	$(CC) $(CFLAGS) -c dependency.h
 clean:
-	rm -f core *.o
+	rm -f *.o *.gch
