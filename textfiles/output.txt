@@ -1,1 +1,2 @@
-Malformed Input detected!
+X depends on Y Z 
+Y depends on Z 

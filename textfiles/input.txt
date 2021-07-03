@@ -1,2 +1,2 @@
-X depend on Y R
+X depends on Y
 Y depends on Z

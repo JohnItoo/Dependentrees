@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include <algorithm>
 #include <iostream>
 #include <map>
@@ -33,14 +35,15 @@ void parseLibraryStructure(
             }
             string substring = libraryString.substr(i, j - i);
 
-            if((stringsFound < 1 || stringsFound > 2) && (substring == DEPENDS || substring == ON))  {
+            if ((stringsFound < 1 || stringsFound > 2) &&
+                (substring == DEPENDS || substring == ON)) {
                 malformedInput = true;
             }
-            if(stringsFound == 1 && substring != DEPENDS) {
+            if (stringsFound == 1 && substring != DEPENDS) {
                 malformedInput = true;
             }
 
-            if(stringsFound == 2 && substring != ON)  {
+            if (stringsFound == 2 && substring != ON) {
                 malformedInput = true;
             }
 
@@ -54,7 +57,10 @@ void parseLibraryStructure(
 
             i = j + 1;
             stringsFound++;
-            if(malformedInput) break;
+            if (malformedInput) break;
+        }
+        if (stringsFound < 4) {
+            malformedInput = true;
         }
     }
 }
@@ -67,7 +73,7 @@ int main() {
     vector<string> outputOrder;
     parseLibraryStructure(dependencyGraph, outputOrder);
 
-    if(malformedInput) {
+    if (malformedInput) {
         cout << "Malformed Input detected!";
         return 0;
     }

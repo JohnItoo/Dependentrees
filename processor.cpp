@@ -27,7 +27,6 @@ std::set<Dependency> Processor::traverseDependencyGraph(Dependency vertex) {
             }
         }
     }
-    // visitedVertices.erase(vertex);
 
     foundDependencies[vertex] = res;
     return res;
@@ -35,14 +34,11 @@ std::set<Dependency> Processor::traverseDependencyGraph(Dependency vertex) {
 
 void Processor::process() {
     for (auto vertexPair : dependencyGraph) {
-        // cout << vertexPair.first.dependencyId << endl;
-        // continue;
         std::set<Dependency> childDependencies;
         std::set<Dependency> visitedVertices;
         if (isCycleDetected) break;
 
         childDependencies = traverseDependencyGraph(vertexPair.first);
-        //   foundDependencies[vertexPair.first].insert(childDependencies);
         std::vector<Dependency> childDependenciesVector(
             childDependencies.size());
         copy(childDependencies.begin(), childDependencies.end(),
