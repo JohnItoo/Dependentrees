@@ -1,12 +1,17 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <set>
+#include <stack>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include "dependency.h"
+#include "processor.h"
 
 using namespace std;
+bool cycle = false;
 
 void parseLibraryStructure(
     map<Dependency, vector<Dependency> >& dependencyGraph,
@@ -14,6 +19,7 @@ void parseLibraryStructure(
     string libraryString;
     while (getline(cin, libraryString)) {
         int stringSize = libraryString.size();
+        if (stringSize == 0) break;
         int i = 0;
         Dependency vertex;
         while (i < stringSize) {
@@ -22,30 +28,27 @@ void parseLibraryStructure(
                 j++;
             }
             string substring = libraryString.substr(i, j - i);
-            i = j + 1;
             if (i == 0) {
-                cout << substring << " ";
                 vertex = Dependency(substring);
                 outputOrder.push_back(substring);
             } else if (substring != "depends" && substring != "on") {
-                cout << substring << " ";
                 Dependency child = Dependency(substring);
                 dependencyGraph[vertex].push_back(child);
             }
+            i = j + 1;
         }
-        cout << endl;
     }
 }
 
 int main() {
-    // freopen("input.txt", "r", stdin);
-    // freopen("output.txt", "w", stdout);
-
-    Dependency dependency;
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
 
     map<Dependency, vector<Dependency> > dependencyGraph;
     vector<string> outputOrder;
     parseLibraryStructure(dependencyGraph, outputOrder);
 
+    Processor processor = Processor(dependencyGraph, outputOrder);
+    processor.process();
     return 0;
 }
